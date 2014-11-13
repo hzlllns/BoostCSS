@@ -3,13 +3,24 @@
 <head>
 	<meta charset="UTF-8">
 	<title>css</title>
-	<!-- <link rel="stylesheet" href="style.css"> -->
+
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/style.css">
 	
 </head>
 <body>
-	<textarea name="input" class="css-textarea" id="input" ></textarea>
-	<textarea id="output" class="css-textarea" readonly></textarea>
-	<button id="submitBtn" onclick="removeSpaces()">submit</button>
+	<div id="wrapper">
+		<h1>CSS Polish</h1>
+		<p>Paste your CSS into the box on the left. The polished code will appear on the right.</p>
+		<form>
+			<textarea name="input" class="css-textarea" id="input" ></textarea>
+			<textarea id="output" class="css-textarea" readonly></textarea>
+			<button id="submitBtn" onclick="removeSpaces()">Polish!</button>
+		</form>
+
+
+		<footer><p>Made by <a href="https://twitter.com/annasafronov" title="Anna Safronova">Anna</a> &amp; <a href="http://hzl.ca">Hazel</a></p></footer>
+	</div>
 </body>
 <script src="js/script.js"></script>
 </html>
