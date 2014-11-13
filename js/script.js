@@ -33,16 +33,30 @@ var output = document.getElementById('output');
 function removeSpaces(){
 
   var userCSS = document.getElementById('input').value;
-  console.log(userCSS);
+  
 
-  for(i=0; i>shorthands.length; i++){
-    if(userCSS !== shorthands[i]){
+   userCSS = userCSS.replace(/\n/g, '');
 
-      userCSS = userCSS.split(' ').join('');
-      userCSS = userCSS.replace(/\s/g, '');
-      console.log(userCSS);
+   var list = userCSS.split('}');
 
+   for(var i = 0; i < list.length; i++){
+    if(list[i] != ""){
+      list[i] = list[i].split('{');
+      for(var p = 0; p < list[i].length; p++){
+        list[i][p] = list[i][p].trim();
+      }
+      list[i][1] = list[i][1].split(';');
+      for(var p = 0; p < list[i][1].length; p++){
+        list[i][1][p] = list[i][1][p].trim();
+        if(list[i][1][p] == ""){
+          list[i][1].splice(p,1);
+        }
+      }
+    } else{
+      list.splice(i,1);
     }
+   }
+   console.log(list);
 
   }
 
@@ -55,7 +69,7 @@ function removeSpaces(){
 
 
 
-}
+
 
  // submitBtn.addEventListener("click", removeSpaces);
 
