@@ -44,25 +44,39 @@ p {
 }
 
 form { 
+	width: 100%;
 	margin: 0 auto;
 	text-align: center;
 	}
 
+	.text-wrapper {
+		width: 50%;
+		float: left;
+	}
+
 	textarea { 
+		float: left;
 		color: #6c6c6c;
 		font: 14px "Fira Mono", Courier New, Courier, sans-serif;
 		margin: 0 10px 0 0;
-		width: 500px;
-		height: 600px;
+		width: 95%;
+		min-height: 60vh;
 		border-radius: 5px;
 		padding: 20px;
+		outline: none;
+		resize: vertical;
 	}
 
 	#output { background-color: #d5d5d5; }
 
+	.form-footer {
+		width: 100%;
+		float: left;
+	}
+
 	button {
 		margin: 20px auto 0 auto;
-		display: block;
+		display: inline-block;
 		padding: 15px 20px;
 		background-color: #61e69d;
 		color: #36424c;
@@ -70,6 +84,7 @@ form {
 		border-radius: 5px;
 		font-size: 20px;
 		border: 0;
+		outline: none;
 	}
 
 	button:hover {
@@ -78,6 +93,9 @@ form {
 
 
 	footer {
+		float: left;
+		overflow: hidden;
+		width: 100%;
 		margin: 60px 0 0 0;
 		font-size: 13px;
 		text-transform: uppercase;

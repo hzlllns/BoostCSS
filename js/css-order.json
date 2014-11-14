@@ -1,5 +1,4 @@
-"css-order": [
-    [
+var cssOrder = [
       "position",
       "top",
       "right",
@@ -278,4 +277,4 @@
       "-ms-animation-direction",
       "-o-animation-direction",
       "animation-direction"
-    ]
+    ];

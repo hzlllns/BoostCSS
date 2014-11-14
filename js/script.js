@@ -1,84 +1,152 @@
- var submitBtn = document.getElementById('submitBtn');
-var output = document.getElementById('output');
-
-
-//keep shorthands in array
- var shorthands = [
-        'animation',
-        'transition',
-        'background',
-        'border',
-        'border-color',
-        'border-style',
-        'border-width',
-        'border-top',
-        'border-right',
-        'border-bottom',
-        'border-left',
-        'border-image',
-        'border-radius',
-        'columns',
-        'column-rule',
-        'flex',
-        'font',
-        'font-variant',
-        'list-style',
-        'margin',
-        'padding',
-        'outline',
-        'text-decoration'
-    ];
-
-
-function removeSpaces(){
-
-  var userCSS = document.getElementById('input').value;
-  
-
-   userCSS = userCSS.replace(/\n/g, '');
-
-   var list = userCSS.split('}');
-
-   for(var i = 0; i < list.length; i++){
-    if(list[i] != ""){
-      list[i] = list[i].split('{');
-      for(var p = 0; p < list[i].length; p++){
-        list[i][p] = list[i][p].trim();
-      }
-      list[i][1] = list[i][1].split(';');
-      for(var p = 0; p < list[i][1].length; p++){
-        list[i][1][p] = list[i][1][p].trim();
-        if(list[i][1][p] == ""){
-          list[i][1].splice(p,1);
-        }
-      }
-    } else{
-      list.splice(i,1);
+Array.prototype.clean = function(deleteValue) {
+  for (var i = 0; i < this.length; i++) {
+    if (this[i] == deleteValue) {         
+      this.splice(i, 1);
+      i--;
     }
-   }
-   console.log(list);
+  }
+  return this;
+};
+
+
+var cssTool = function(){
+
+  var self = this;
+  self.list = [];
+
+  self.originalCss = "";
+
+  self.cssSubmit = function(e) {
+    e.preventDefault();
+    self.do(document.getElementById('input').value);
+  } 
+
+
+  self.do = function(originalCss) {
+
+    self.list = [];
+
+    self.originalCss = originalCss;
+
+    var stripedCss = self.stripCss(originalCss);
+
+    var dirtyElements = self.breakCssToElements(stripedCss);
+
+    self.importElements(dirtyElements);
+
+    self.sortRules();
+
+    //the list at this point is sorted
+    //TODO: output the list
+    console.log(self.list);
+  }
+
+
+  self.stripCss = function(originalCss){
+    return originalCss.replace(/\n/g, '');
+  }
+
+    self.breakCssToElements = function(stripCSS) {
+        return stripCSS.split('}').clean("");
+    }
+
+  self.importElements = function(dirtyElements) {
+
+    for (var i =  0; i < dirtyElements.length; i++) {
+        self.list.push(new cssRule(dirtyElements[i]));
+    };
 
   }
 
-  
+  self.sortRules = function(){
+    for (var i = 0; i < self.list.length; i++) {
+      self.list[i].sortRules();
+    };
+  }
 
-  // onblur="this.value=removeSpaces(this.value);"
+ 
 
-  //console.log(output);
-  //output.value = userCSS;
+  document.getElementById('submitBtn').addEventListener('click', self.cssSubmit); 
+
+}
+
+var cssRule = function(dirtyElement){
+  var self = this;
+
+  self.selectors = [];
+  self.rules = [];
+
+  self.cleanDirtyElement = function(dirtyElement){
+
+    var tmp = self.breakElement(dirtyElement);
+
+    self.parseSelectors(tmp[0]);
+
+    self.parseRules(tmp[1]);
+
+    
+  }
+
+  self.breakElement = function(dirtyElement){
+
+    dirtyElement = dirtyElement.trim();
+
+    return dirtyElement.split('{').clean("");
+  }
+
+  self.parseSelectors = function(dirtySelectors){
+
+    dirtySelectors = dirtySelectors.trim();
+
+    self.selectors = dirtySelectors.split(',').clean("");
+
+  }
+
+  self.parseRules = function(dirtyRules){
+
+    dirtyRules = dirtyRules.trim();
+
+    var tmpRules = dirtyRules.split(';').clean("");
+
+    for (var i = 0; i < tmpRules.length; i++) {
+        self.parseRule(tmpRules[i]);
+    };
 
 
 
+  }
+
+  self.parseRule = function(dirtyRule){
+
+    dirtyRule = dirtyRule.trim();
+
+    var tmp = dirtyRule.split(':').clean("");
 
 
- // submitBtn.addEventListener("click", removeSpaces);
+    self.rules.push({ key: tmp[0].trim(), value: tmp[1].trim() });
+
+  }
+
+   self.sortRules = function() {
+    self.rules.sort(self.compare);
+  }
+
+  self.compare = function(a, b){
+    if(cssOrder.indexOf(a.key) < cssOrder.indexOf(b.key)){
+      return -1;
+    } else {
+      return 1;
+    }
+    return 0;
+  }
 
 
-//write checking function based on punctuation
-// store 'px', 'em', 'rem', 'vh', 'vm' as one unit each
-// remove all spaces except in shorthands
-// check shorthand for double space and remove it
-//
+  self.cleanDirtyElement(dirtyElement);
+
+}
+
+var tool = new cssTool();
+
 
 
 
