@@ -1,3 +1,5 @@
+Parse.initialize("8Sgr1uNFMCv5QAXlH7o68GGnbbhm5A88P7hb0XAV", "JQdOMEwo8T6ENLZxXJokE9hzT6TNJak3o9UVvutm");
+
 Array.prototype.clean = function(deleteValue) {
   for (var i = 0; i < this.length; i++) {
     if (this[i] == deleteValue) {         
@@ -19,7 +21,25 @@ var cssTool = function(){
   self.cssSubmit = function(e) {
     e.preventDefault();
     self.do(document.getElementById('input').value);
-  } 
+
+    // PARSE STARTS HERE
+
+    var InputObject = Parse.Object.extend("UserCssDB");
+    var inputInstance = new InputObject();
+
+       inputInstance.save({
+         inputCSS: document.getElementById('input').value
+       }, {
+         success: function(object) {
+           alert("Success!!");
+         },
+         error: function(model, error) {
+           alert("Failed to create new object, with error code: " + error.message);
+         }
+       });
+
+    // PARSE ENDS HERE
+  }
 
 
   self.do = function(originalCss) {
