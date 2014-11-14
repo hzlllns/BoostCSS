@@ -27,7 +27,7 @@ a:hover {
 
 /* Content
 --------------------------------------------- */
-#left-panel-link {
+#menu-btn {
 	border-radius: 0 15% 15% 0;
 	color: #f39c12;
 	padding: 15px 20px;
@@ -110,10 +110,33 @@ footer {
 	letter-spacing: 1px;
 }
 
-.panel {
+.data {
 	display: none;
-	width: 220px;
+	width: 300px;
 	padding: 20px;
 	background-color: #333;
 	color: #fff;
+}
+
+#recent-css {
+	list-style: none;
+	padding-left: 0;
+}
+
+#recent-css li {
+	margin-bottom: 1em;
+}
+
+.recent-btn {
+	display: inline-block;
+	padding: 4px 10px;
+	font-size: 13px;
+	letter-spacing: 1.3px;
+	background-color: #61e69d;
+	border-radius: 4px;
+	color: #36424c;
+}
+
+.delete {
+	background-color: #f39c12;
 }
