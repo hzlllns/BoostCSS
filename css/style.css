@@ -27,6 +27,14 @@ a:hover {
 
 /* Content
 --------------------------------------------- */
+#menu-btn {
+	border-radius: 0 15% 15% 0;
+	color: #f39c12;
+	padding: 15px 20px;
+	float: left;
+	background-color: #ecf0f1;
+	font-size: 1.5em;
+}
 
 #wrapper {
 	width: 1100px;
@@ -92,12 +100,43 @@ form {
 	}
 
 
-	footer {
-		float: left;
-		overflow: hidden;
-		width: 100%;
-		margin: 60px 0 0 0;
-		font-size: 13px;
-		text-transform: uppercase;
-		letter-spacing: 1px;
-	}
+footer {
+	float: left;
+	overflow: hidden;
+	width: 100%;
+	margin: 60px 0 0 0;
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.data {
+	display: none;
+	width: 300px;
+	padding: 20px;
+	background-color: #333;
+	color: #fff;
+}
+
+#recent-css {
+	list-style: none;
+	padding-left: 0;
+}
+
+#recent-css li {
+	margin-bottom: 1em;
+}
+
+.recent-btn {
+	display: inline-block;
+	padding: 4px 10px;
+	font-size: 13px;
+	letter-spacing: 1.3px;
+	background-color: #61e69d;
+	border-radius: 4px;
+	color: #36424c;
+}
+
+.delete {
+	background-color: #f39c12;
+}

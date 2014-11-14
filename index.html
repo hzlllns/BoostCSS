@@ -6,23 +6,29 @@
 
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/style.css">
+
 	<script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.1.min.js"></script>
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
+
+	<a id="menu-btn" href="#side-menu"><i class="fa fa-bookmark"></i></a>
+
 	<div id="wrapper">
 		<h1>CSS Polish</h1>
 		<form>
 			<div class="text-wrapper">
 				<p>Paste your CSS into the box.</p>
-				<textarea name="input" class="css-textarea" id="input" >h1 { 
-	color: #61e69d; 
-	text-align: center;
-}
+				<textarea name="input" class="css-textarea" id="input" >
+				h1 { 
+					color: #61e69d; 
+					text-align: center;
+				}
 
-p { 
-	text-align: center;
-	color: #d5d5d5;
-}</textarea>
+				p { 
+					text-align: center;
+					color: #d5d5d5;
+				}</textarea>
 			</div>
 
 			<div class="text-wrapper">
@@ -37,8 +43,35 @@ p {
 
 		<footer><p>Made by <a href="https://twitter.com/annasafronov" title="Anna Safronova">Anna</a> &amp; <a href="http://hzl.ca">Hazel</a></p></footer>
 	</div>
+
+
+	<div id="side-menu" class="data">
+	    <h2>Recent CSS</h2>
+	    <ul id="recent-css">
+	    	<li>
+	    		<a href="#" class="saved-css">Saved on Nov 14th at 4:17 pm</a>
+	    		<a href="#" class="recent-btn">copy</a>
+	    		<a href="#" class="recent-btn delete">delete</a>
+	    	</li>
+
+	    	<li>
+	    		<a href="#" class="saved-css">Saved on Nov 11th at 6:34 pm</a>
+	    		<a href="#" class="recent-btn">copy</a>
+	    		<a href="#" class="recent-btn delete">delete</a>
+	    	</li>
+	    	<li>
+	    		<a href="#" class="saved-css">Saved on Nov 10th at 1:20 pm</a>
+	    		<a href="#" class="recent-btn">copy</a>
+	    		<a href="#" class="recent-btn delete">delete</a>
+	    	</li>
+	    </ul>
+	   
+	</div>
 </body>
 <script src="js/css-order.json"></script>
 <script src="js/script.js"></script>
-
+<script src="js/jquery.panelslider.min.js"></script>
+<script>
+	$('#menu-btn').panelslider();
+</script>
 </html>
