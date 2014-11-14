@@ -27,6 +27,14 @@ a:hover {
 
 /* Content
 --------------------------------------------- */
+#left-panel-link {
+	border-radius: 0 15% 15% 0;
+	color: #f39c12;
+	padding: 15px 20px;
+	float: left;
+	background-color: #ecf0f1;
+	font-size: 1.5em;
+}
 
 #wrapper {
 	width: 1100px;
@@ -92,12 +100,20 @@ form {
 	}
 
 
-	footer {
-		float: left;
-		overflow: hidden;
-		width: 100%;
-		margin: 60px 0 0 0;
-		font-size: 13px;
-		text-transform: uppercase;
-		letter-spacing: 1px;
-	}
+footer {
+	float: left;
+	overflow: hidden;
+	width: 100%;
+	margin: 60px 0 0 0;
+	font-size: 13px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+}
+
+.panel {
+	display: none;
+	width: 220px;
+	padding: 20px;
+	background-color: #333;
+	color: #fff;
+}
