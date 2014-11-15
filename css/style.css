@@ -12,13 +12,13 @@
 
 body {
 	font: 14px/24px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	background-color: #36424c;
 	letter-spacing: 1px;
+	background-color: #36424c;
 }
 
-a { 
-	color: #d5d5d5; 
+a {
 	font-weight: bold;
+	color: #d5d5d5;
 }
 
 a:hover {
@@ -26,14 +26,15 @@ a:hover {
 }
 
 /* Content
+* 
 --------------------------------------------- */
 #menu-btn {
-	border-radius: 0 15% 15% 0;
-	color: #f39c12;
-	padding: 15px 20px;
 	float: left;
-	background-color: #ecf0f1;
+	padding: 15px 20px;
 	font-size: 1.5em;
+	color: #f39c12;
+	background-color: #ecf0f1;
+	border-radius: 0 15% 15% 0;
 }
 
 #wrapper {
@@ -41,70 +42,71 @@ a:hover {
 	margin: 80px auto;
 }
 
-h1 { 
-	color: #61e69d; 
+h1 {
+	color: #61e69d;
 	text-align: center;
 }
 
-p { 
-	text-align: center;
+p {
 	color: #d5d5d5;
+	text-align: center;
 }
 
-form { 
+form {
 	width: 100%;
 	margin: 0 auto;
 	text-align: center;
-	}
+}
 
-	.text-wrapper {
-		width: 50%;
-		float: left;
-	}
+.text-wrapper {
+	float: left;
+	width: 50%;
+}
 
-	textarea { 
-		float: left;
-		color: #6c6c6c;
-		font: 14px "Fira Mono", Courier New, Courier, sans-serif;
-		margin: 0 10px 0 0;
-		width: 95%;
-		min-height: 60vh;
-		border-radius: 5px;
-		padding: 20px;
-		outline: none;
-		resize: vertical;
-	}
+textarea {
+	float: left;
+	width: 95%;
+	min-height: 60vh;
+	padding: 20px;
+	margin: 0 10px 0 0;
+	font: 14px "Fira Mono", Courier New, Courier, sans-serif;
+	color: #6c6c6c;
+	resize: vertical;
+	border-radius: 5px;
+	outline: none;
+}
 
-	#output { background-color: #d5d5d5; }
+#output {
+	background-color: #d5d5d5;
+}
 
-	.form-footer {
-		width: 100%;
-		float: left;
-	}
+.form-footer {
+	float: left;
+	width: 100%;
+}
 
-	button {
-		margin: 20px auto 0 auto;
-		display: inline-block;
-		padding: 15px 20px;
-		background-color: #61e69d;
-		color: #36424c;
-		text-decoration: none;
-		border-radius: 5px;
-		font-size: 20px;
-		border: 0;
-		outline: none;
-	}
+button {
+	display: inline-block;
+	padding: 15px 20px;
+	margin: 20px auto 0 auto;
+	font-size: 20px;
+	color: #36424c;
+	text-decoration: none;
+	background-color: #61e69d;
+	border: 0;
+	border-radius: 5px;
+	outline: none;
+}
 
-	button:hover {
-		background-color: #f3de6a;
-	}
-
+button:hover {
+	background-color: #f3de6a;
+}
 
 footer {
 	float: left;
-	overflow: hidden;
 	width: 100%;
 	margin: 60px 0 0 0;
+	overflow: hidden;
 	font-size: 13px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
@@ -114,13 +116,13 @@ footer {
 	display: none;
 	width: 300px;
 	padding: 20px;
-	background-color: #333;
 	color: #fff;
+	background-color: #333;
 }
 
 #recent-css {
-	list-style: none;
 	padding-left: 0;
+	list-style: none;
 }
 
 #recent-css li {
@@ -131,10 +133,10 @@ footer {
 	display: inline-block;
 	padding: 4px 10px;
 	font-size: 13px;
+	color: #36424c;
 	letter-spacing: 1.3px;
 	background-color: #61e69d;
 	border-radius: 4px;
-	color: #36424c;
 }
 
 .delete {
