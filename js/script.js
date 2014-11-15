@@ -2,6 +2,8 @@ Parse.initialize("8Sgr1uNFMCv5QAXlH7o68GGnbbhm5A88P7hb0XAV", "JQdOMEwo8T6ENLZxXJ
 
 var inputText = document.getElementById('input');
 var outputText = document.getElementById('output');
+var submitBtn = document.getElementById('submitBtn');
+
 
 inputText.setAttribute('spellcheck', 'false');
 
@@ -17,6 +19,50 @@ Array.prototype.clean = function(deleteValue) {
   return this;
 };
 
+
+var guid = (function() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+               .toString(16)
+               .substring(1);
+  }
+  return function() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+           s4() + '-' + s4() + s4() + s4();
+  };
+})();
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
+    }
+    return "";
+}
+
+
+
+//UUID
+var user_id = getCookie('user_id');
+
+if (user_id == "") {
+    var user_id = guid();
+    setCookie('user_id', user_id, 365);
+}
+
+
+
+
 var cssTool = function(){
 
   var self = this;
@@ -30,60 +76,22 @@ var cssTool = function(){
   //submit button callback
   self.cssSubmit = function(e) {
     e.preventDefault();
-    self.do(inputText.value);
+    self.do(inputText.value, true);
   } 
 
   //main function
-  self.do = function(originalCss) {
+  self.do = function(originalCss, save) {
+
+    //default save-recent true
+    if(save === undefined){
+        save = true;
+    }
 
     //reset cssRule array 
     self.list = [];
 
     //store original css
     self.originalCss = originalCss;
-
-    // PARSE start ----------
-
-    //store in PARSE "UserCssDB"
-    var InputObject = Parse.Object.extend("UserCssDB");
-    var inputInstance = new InputObject();
-
-    inputInstance.save({
-      inputCSS: originalCss
-    }, { 
-      success: function(object) {
-        createRecentHTML(object);
-      },
-      error: function(model, error) {
-        console.log("Something's wrong");
-      }
-    });
-
-    //Add link to side menu
-    function createRecentHTML (object){
-      var inputInstance = new InputObject();
-      var query = new Parse.Query(InputObject);
-      inputInstance.set("inputCSS", inputCSS, object.currentTarget.originalCss);
-      inputInstance.save();
-
-      //create list
-      var recentHTML = document.createElement('li');
-      var timestamp = document.createElement('p');
-      timestamp.setAttribute('class', 'saved-css');
-      timestamp.innerHTML = "view";
-      var viewBtn = document.createElement('a');
-      viewBtn.setAttribute('class', 'viewBtn');
-      viewBtn.setAttribute('href','link.com');
-      viewBtn.innerHTML = "view";
-
-      recentHTML.innerHTML = object.currentTarget.originalCss;
-      recentHTML.appendChild(viewBtn);
-      recentHTML.appendChild(timestamp);
-      document.getElementById("recent-css").appendChild(recentHTML);
-    }
-
-    // PARSE end ----------
-
 
     //strip css
     var stripedCss = self.stripCss(originalCss);
@@ -99,6 +107,12 @@ var cssTool = function(){
 
     //output formated css
     self.outputCss();
+
+
+    if(save === true){
+        parse.saveRecent(originalCss);   
+    }
+    
 
   }
     //format and output CSS to textarea
@@ -142,7 +156,7 @@ var cssTool = function(){
     };
   }
 
-  document.getElementById('submitBtn').addEventListener('click', self.cssSubmit); 
+  submitBtn.addEventListener('click', self.cssSubmit); 
 
 }
 
@@ -347,8 +361,140 @@ var cssRule = function(dirtyElement){
 }
 
 
+var parse = function(){
+
+  var self = this;
+
+  self.InputObject = Parse.Object.extend("UserCssDB");
+
+
+
+    self.saveRecent = function(originalCss){
+        var inputInstance = new self.InputObject();
+
+        inputInstance.save({
+            inputCSS: originalCss,
+            user_id: user_id
+        }, { 
+            success: self.createRecentHTML,
+            error: function(model, error) {
+                console.log("Something's wrong");
+            }
+        });
+    }
+
+    //Add link to side menu
+    self.createRecentHTML = function(object){
+      //create list
+      var recentHTML = document.createElement('li');
+      var timestamp = document.createElement('strong');
+      timestamp.setAttribute('class', 'saved-css');
+      timestamp.innerHTML = self.formatDate(object.createdAt);
+      var viewBtn = document.createElement('a');
+      viewBtn.setAttribute('class', 'recent-btn');
+      viewBtn.setAttribute('href', '#');
+      viewBtn.setAttribute('data-id',object.id);
+      viewBtn.innerHTML = "view";
+      viewBtn.addEventListener('click', self.loadRecent); 
+
+
+      var dltBtn = document.createElement('a');
+      dltBtn.setAttribute('class', 'recent-btn delete');
+      dltBtn.setAttribute('href','#');
+      dltBtn.setAttribute('data-id',object.id);
+      dltBtn.innerHTML = "view";
+      dltBtn.addEventListener('click', self.deleteRecent); 
+      recentHTML.appendChild(timestamp);
+      recentHTML.appendChild(viewBtn);
+      recentHTML.appendChild(dltBtn);
+      document.getElementById("recent-css").appendChild(recentHTML);
+
+
+    }
+
+    self.loadRecents = function(){
+        var query = new Parse.Query(self.InputObject);
+        query.equalTo("user_id", user_id);
+
+        query.find({
+            success: function(results) {
+                for (var i = 0; i < results.length; i++) { 
+                  var object = results[i];
+                  self.createRecentHTML(object);
+                }
+            },
+            error: function(error) {
+                console.log("Something's wrong");
+            }
+        });
+    }
+
+    self.loadRecent = function(e){
+        event.preventDefault();
+        var item_id = e.target.dataset.id;
+        var query = new Parse.Query(self.InputObject);
+        
+        query.equalTo("objectId", item_id);
+
+        query.first({
+            success: function(object) {
+                originalCss = object.get('inputCSS');
+                inputText.value = originalCss;
+                tool.do(originalCss, false);
+
+            },
+            error: function(error) {
+                console.log("Something's wrong");
+            }
+        });
+    }
+
+    self.deleteRecent = function(e){
+        event.preventDefault();
+        var item_id = e.target.dataset.id;
+        var query = new Parse.Query(self.InputObject);
+        
+        query.equalTo("objectId", item_id);
+
+        query.first({
+            success: function(object) {
+                object.destroy();
+                var li = e.target.parentNode;
+                e.target.parentNode.parentNode.removeChild(li);
+            },
+            error: function(error) {
+                console.log("Something's wrong");
+            }
+        });
+    }
+
+    self.formatDate = function(date){
+
+        var createdAt = new Date(date);
+        var day = createdAt.getDate();
+        var month = createdAt.getMonth();
+        var hr = createdAt.getHours();
+        var min = createdAt.getMinutes();
+            console.log(min);
+        if(min < 10){
+            min = "0" + min;
+        }
+
+        return 'Saved on '+  day + ' ' +m_names[month]+' at ' + hr + ':' + min;
+    }
+
+    self.loadRecents();
+
+}
+
+
 //create an instance 
 var tool = new cssTool();
+
+var parse = new parse();
+
+
+
 
 
 
