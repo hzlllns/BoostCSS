@@ -20,21 +20,12 @@
 		<form>
 			<div class="text-wrapper">
 				<p>Paste your CSS into the box.</p>
-				<textarea name="input" class="css-textarea" id="input" >
-				h1 { 
-					color: #61e69d; 
-					text-align: center;
-				}
-
-				p { 
-					text-align: center;
-					color: #d5d5d5;
-				}</textarea>
+				<textarea name="input" class="css-textarea" id="input"></textarea>
 			</div>
 
 			<div class="text-wrapper">
 				<p>The polished code will appear here.</p>
-				<textarea id="output" class="css-textarea" readonly></textarea>
+				<textarea id="output" class="css-textarea" readonly onclick="this.select()"></textarea>
 			</div>
 			<div class="form-footer">
 				<button id="submitBtn">Polish!</button>				
@@ -50,18 +41,18 @@
 	    <ul id="recent-css">
 	    	<li>
 	    		<a href="#" class="saved-css">Saved on Nov 14th at 4:17 pm</a>
-	    		<a href="#" class="recent-btn">copy</a>
+	    		<a href="#" class="recent-btn">view</a>
 	    		<a href="#" class="recent-btn delete">delete</a>
 	    	</li>
 
 	    	<li>
 	    		<a href="#" class="saved-css">Saved on Nov 11th at 6:34 pm</a>
-	    		<a href="#" class="recent-btn">copy</a>
+	    		<a href="#" class="recent-btn">view</a>
 	    		<a href="#" class="recent-btn delete">delete</a>
 	    	</li>
 	    	<li>
 	    		<a href="#" class="saved-css">Saved on Nov 10th at 1:20 pm</a>
-	    		<a href="#" class="recent-btn">copy</a>
+	    		<a href="#" class="recent-btn">view</a>
 	    		<a href="#" class="recent-btn delete">delete</a>
 	    	</li>
 	    </ul>
