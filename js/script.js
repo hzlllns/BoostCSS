@@ -1,60 +1,14 @@
 Parse.initialize("8Sgr1uNFMCv5QAXlH7o68GGnbbhm5A88P7hb0XAV", "JQdOMEwo8T6ENLZxXJokE9hzT6TNJak3o9UVvutm");
 
+//Set dom controls
 var inputText = document.getElementById('input');
 var outputText = document.getElementById('output');
 var submitBtn = document.getElementById('submitBtn');
-
-
 inputText.setAttribute('spellcheck', 'false');
 
 
-//clean array elements by value
-Array.prototype.clean = function(deleteValue) {
-  for (var i = 0; i < this.length; i++) {
-    if (this[i] == deleteValue) {         
-      this.splice(i, 1);
-      i--;
-    }
-  }
-  return this;
-};
-
-
-var guid = (function() {
-  function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-               .toString(16)
-               .substring(1);
-  }
-  return function() {
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-           s4() + '-' + s4() + s4() + s4();
-  };
-})();
-
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + "; " + expires;
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i=0; i<ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0)==' ') c = c.substring(1);
-        if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
-    }
-    return "";
-}
-
-
-
-//UUID
+//get user_id from cookie or generate one
 var user_id = getCookie('user_id');
-
 if (user_id == "") {
     var user_id = guid();
     setCookie('user_id', user_id, 365);
@@ -110,11 +64,15 @@ var cssTool = function(){
 
 
     if(save === true){
-        parse.saveRecent(originalCss);   
+
+        //save css to recent
+        parse.saveRecent(originalCss);  
+
     }
     
 
   }
+
     //format and output CSS to textarea
     self.outputCss = function() {
 
@@ -163,11 +121,12 @@ var cssTool = function(){
 
 
 
-//css object that contains selector(s) and properties (key: value) + comment
+//css object that contains selector(s) and properties (key: value) + comments
 var cssRule = function(dirtyElement){
 
   var self = this;
 
+  //create array for comments
   self.comments = [];
 
   //create array for selectors
@@ -263,7 +222,6 @@ var cssRule = function(dirtyElement){
         dirtyComment = dirtyComment.replace(/\*/g, '');
         var comments = dirtyComment.split("\n").clean("");
 
-
         for(i = 0; i < comments.length; i++){
             comments[i] = comments[i].trim();
         }
@@ -293,7 +251,7 @@ var cssRule = function(dirtyElement){
     return 0;
   }
 
-  //output method
+    //output method
     self.formatCss = function(){
 
         var temp = self.formatComment();
@@ -361,14 +319,16 @@ var cssRule = function(dirtyElement){
 }
 
 
+
 var parse = function(){
 
   var self = this;
 
+
   self.InputObject = Parse.Object.extend("UserCssDB");
 
 
-
+    //save css to recent list
     self.saveRecent = function(originalCss){
         var inputInstance = new self.InputObject();
 
@@ -412,6 +372,7 @@ var parse = function(){
 
     }
 
+    //load list of recent css
     self.loadRecents = function(){
         var query = new Parse.Query(self.InputObject);
         query.equalTo("user_id", user_id);
@@ -429,6 +390,7 @@ var parse = function(){
         });
     }
 
+    //load recent css
     self.loadRecent = function(e){
         event.preventDefault();
         var item_id = e.target.dataset.id;
@@ -449,6 +411,7 @@ var parse = function(){
         });
     }
 
+    //delete css from recent
     self.deleteRecent = function(e){
         event.preventDefault();
         var item_id = e.target.dataset.id;
@@ -468,6 +431,8 @@ var parse = function(){
         });
     }
 
+
+    //format date
     self.formatDate = function(date){
 
         var createdAt = new Date(date);
@@ -475,7 +440,7 @@ var parse = function(){
         var month = createdAt.getMonth();
         var hr = createdAt.getHours();
         var min = createdAt.getMinutes();
-            console.log(min);
+
         if(min < 10){
             min = "0" + min;
         }
@@ -488,9 +453,10 @@ var parse = function(){
 }
 
 
-//create an instance 
+//create css tool instance 
 var tool = new cssTool();
 
+//create parse instance
 var parse = new parse();
 
 
