@@ -1,19 +1,21 @@
+Parse.initialize("8Sgr1uNFMCv5QAXlH7o68GGnbbhm5A88P7hb0XAV", "JQdOMEwo8T6ENLZxXJokE9hzT6TNJak3o9UVvutm");
+
+//Set dom controls
 var inputText = document.getElementById('input');
 var outputText = document.getElementById('output');
-
+var submitBtn = document.getElementById('submitBtn');
 inputText.setAttribute('spellcheck', 'false');
 
 
-//clean array elements by value
-Array.prototype.clean = function(deleteValue) {
-  for (var i = 0; i < this.length; i++) {
-    if (this[i] == deleteValue) {         
-      this.splice(i, 1);
-      i--;
-    }
-  }
-  return this;
-};
+//get user_id from cookie or generate one
+var user_id = getCookie('user_id');
+if (user_id == "") {
+    var user_id = guid();
+    setCookie('user_id', user_id, 365);
+}
+
+
+
 
 var cssTool = function(){
 
@@ -28,11 +30,16 @@ var cssTool = function(){
   //submit button callback
   self.cssSubmit = function(e) {
     e.preventDefault();
-    self.do(inputText.value);
+    self.do(inputText.value, true);
   } 
 
   //main function
-  self.do = function(originalCss) {
+  self.do = function(originalCss, save) {
+
+    //default save-recent true
+    if(save === undefined){
+        save = true;
+    }
 
     //reset cssRule array 
     self.list = [];
@@ -55,7 +62,17 @@ var cssTool = function(){
     //output formated css
     self.outputCss();
 
+
+    if(save === true){
+
+        //save css to recent
+        parse.saveRecent(originalCss);  
+
+    }
+    
+
   }
+
     //format and output CSS to textarea
     self.outputCss = function() {
 
@@ -97,18 +114,19 @@ var cssTool = function(){
     };
   }
 
-  document.getElementById('submitBtn').addEventListener('click', self.cssSubmit); 
+  submitBtn.addEventListener('click', self.cssSubmit); 
 
 }
 
 
 
 
-//css object that contains selector(s) and properties (key: value) + comment
+//css object that contains selector(s) and properties (key: value) + comments
 var cssRule = function(dirtyElement){
 
   var self = this;
 
+  //create array for comments
   self.comments = [];
 
   //create array for selectors
@@ -204,7 +222,6 @@ var cssRule = function(dirtyElement){
         dirtyComment = dirtyComment.replace(/\*/g, '');
         var comments = dirtyComment.split("\n").clean("");
 
-
         for(i = 0; i < comments.length; i++){
             comments[i] = comments[i].trim();
         }
@@ -234,7 +251,7 @@ var cssRule = function(dirtyElement){
     return 0;
   }
 
-  //output method
+    //output method
     self.formatCss = function(){
 
         var temp = self.formatComment();
@@ -302,8 +319,148 @@ var cssRule = function(dirtyElement){
 }
 
 
-//create an instance 
+
+var parse = function(){
+
+  var self = this;
+
+
+  self.InputObject = Parse.Object.extend("UserCssDB");
+
+
+    //save css to recent list
+    self.saveRecent = function(originalCss){
+        var inputInstance = new self.InputObject();
+
+        inputInstance.save({
+            inputCSS: originalCss,
+            user_id: user_id
+        }, { 
+            success: self.createRecentHTML,
+            error: function(model, error) {
+                console.log("Something's wrong");
+            }
+        });
+    }
+
+    //Add link to side menu
+    self.createRecentHTML = function(object){
+      //create list
+      var recentHTML = document.createElement('li');
+      var timestamp = document.createElement('strong');
+      timestamp.setAttribute('class', 'saved-css');
+      timestamp.innerHTML = self.formatDate(object.createdAt);
+      var viewBtn = document.createElement('a');
+      viewBtn.setAttribute('class', 'recent-btn');
+      viewBtn.setAttribute('href', '#');
+      viewBtn.setAttribute('data-id',object.id);
+      viewBtn.innerHTML = "view";
+      viewBtn.addEventListener('click', self.loadRecent); 
+
+
+      var dltBtn = document.createElement('a');
+      dltBtn.setAttribute('class', 'recent-btn delete');
+      dltBtn.setAttribute('href','#');
+      dltBtn.setAttribute('data-id',object.id);
+      dltBtn.innerHTML = "delete";
+      dltBtn.addEventListener('click', self.deleteRecent); 
+      recentHTML.appendChild(timestamp);
+      recentHTML.appendChild(viewBtn);
+      recentHTML.appendChild(dltBtn);
+      document.getElementById("recent-css").appendChild(recentHTML);
+
+
+    }
+
+    //load list of recent css
+    self.loadRecents = function(){
+        var query = new Parse.Query(self.InputObject);
+        query.equalTo("user_id", user_id);
+
+        query.find({
+            success: function(results) {
+                for (var i = 0; i < results.length; i++) { 
+                  var object = results[i];
+                  self.createRecentHTML(object);
+                }
+            },
+            error: function(error) {
+                console.log("Something's wrong");
+            }
+        });
+    }
+
+    //load recent css
+    self.loadRecent = function(e){
+        event.preventDefault();
+        var item_id = e.target.dataset.id;
+        var query = new Parse.Query(self.InputObject);
+        
+        query.equalTo("objectId", item_id);
+
+        query.first({
+            success: function(object) {
+                originalCss = object.get('inputCSS');
+                inputText.value = originalCss;
+                tool.do(originalCss, false);
+
+            },
+            error: function(error) {
+                console.log("Something's wrong");
+            }
+        });
+    }
+
+    //delete css from recent
+    self.deleteRecent = function(e){
+        event.preventDefault();
+        var item_id = e.target.dataset.id;
+        var query = new Parse.Query(self.InputObject);
+        
+        query.equalTo("objectId", item_id);
+
+        query.first({
+            success: function(object) {
+                object.destroy();
+                var li = e.target.parentNode;
+                e.target.parentNode.parentNode.removeChild(li);
+            },
+            error: function(error) {
+                console.log("Something's wrong");
+            }
+        });
+    }
+
+
+    //format date
+    self.formatDate = function(date){
+
+        var createdAt = new Date(date);
+        var day = createdAt.getDate();
+        var month = createdAt.getMonth();
+        var hr = createdAt.getHours();
+        var min = createdAt.getMinutes();
+
+        if(min < 10){
+            min = "0" + min;
+        }
+
+        return 'Saved on '+  day + ' ' +m_names[month]+' at ' + hr + ':' + min;
+    }
+
+    self.loadRecents();
+
+}
+
+
+//create css tool instance 
 var tool = new cssTool();
+
+//create parse instance
+var parse = new parse();
+
+
+
 
 
 

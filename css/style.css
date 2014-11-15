@@ -31,15 +31,16 @@ a:hover {
 #menu-btn {
 	float: left;
 	padding: 15px 20px;
+	margin-top: 50px;
 	font-size: 1.5em;
 	color: #f39c12;
 	background-color: #ecf0f1;
 	border-radius: 0 15% 15% 0;
 }
-
 #wrapper {
 	width: 1100px;
-	margin: 80px auto;
+	margin: 80px 0 0 8%;
+	position: fixed;
 }
 
 h1 {
@@ -129,6 +130,10 @@ footer {
 	margin-bottom: 1em;
 }
 
+#recent-css strong {
+	display: block;
+}
+
 .recent-btn {
 	display: inline-block;
 	padding: 4px 10px;
@@ -137,6 +142,7 @@ footer {
 	letter-spacing: 1.3px;
 	background-color: #61e69d;
 	border-radius: 4px;
+	margin: 10px 10px 0 0;
 }
 
 .delete {
